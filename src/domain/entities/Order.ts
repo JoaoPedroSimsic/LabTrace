@@ -9,6 +9,6 @@ export class Order {
 		public customer: string,
 		public state: OrderState,
 		public status: OrderStatus,
-		public service: Service,
-	) {}
+		public service: Service[],
+	) { }
 }
