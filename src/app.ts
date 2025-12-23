@@ -1,10 +1,14 @@
 import express from "express";
+import { initMongoConnection } from "./adapters/infrastructure/db/mongoConnection";
 
 class App {
 	app;
 
 	constructor() {
 		this.app = express();
+		this.middlewares();
+		this.routes();
+		this.dbs();
 	}
 
 	middlewares() {
@@ -13,6 +17,11 @@ class App {
 
 	routes() {
 		// this.app.use('/', assad);
+	}
+
+	dbs() {
+		const db = initMongoConnection();	
+		console.log(db);
 	}
 }
 
