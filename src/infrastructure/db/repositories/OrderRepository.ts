@@ -1,7 +1,7 @@
 import { IOrderRepository } from "../../../domain/repositories/IOrderRepository";
 import { Order } from "../../../domain/entities/Order";
 import { OrderModel, IOrderDocument } from "../models/OrderModel";
-import { OrderState } from "../../../domain/value-objects/OrderState";
+import { OrderState } from "../../../domain/value-objects/order/OrderState";
 import { Service } from "../../../domain/entities/Service";
 
 export class OrderRepository implements IOrderRepository {

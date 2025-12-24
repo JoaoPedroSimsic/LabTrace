@@ -1,5 +1,5 @@
-import { OrderState } from "../value-objects/OrderState";
-import { OrderStatus } from "../value-objects/OrderStatus";
+import { OrderState } from "../value-objects/order/OrderState";
+import { OrderStatus } from "../value-objects/order/OrderStatus";
 import { Service } from "./Service";
 
 export class Order {
