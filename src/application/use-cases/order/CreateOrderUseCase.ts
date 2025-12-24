@@ -1,3 +1,4 @@
+import { injectable, inject } from "tsyringe";
 import { Order } from "../../../domain/entities/Order";
 import { IOrderRepository } from "../../../domain/repositories/IOrderRepository";
 import { Service } from "../../../domain/entities/Service";
@@ -9,8 +10,11 @@ interface CreateOrderInput {
 	services: { name: string; value: number }[];
 }
 
+@injectable()
 export class CreateOrderUseCase {
-	constructor(private orderRepository: IOrderRepository) { }
+	constructor(
+		@inject("OrderRepository") private orderRepository: IOrderRepository,
+	) { }
 
 	async execute(input: CreateOrderInput): Promise<void> {
 		const services = input.services.map(

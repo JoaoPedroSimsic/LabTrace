@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import "./shared/container"
 import express, { Application } from "express";
 import { initMongoConnection } from "./infrastructure/db/mongoConnection";
 import { orderRoutes } from "./infrastructure/http/routes/orderRoutes";
@@ -12,16 +14,16 @@ class App {
 		this.dbs();
 	}
 
+	dbs() {
+		initMongoConnection();
+	}
+
 	middlewares() {
 		this.app.use(express.json());
 	}
 
 	routes() {
 		this.app.use("/orders", orderRoutes);
-	}
-
-	dbs() {
-		initMongoConnection();
 	}
 }
 
