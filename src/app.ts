@@ -4,6 +4,8 @@ import express, { Application } from "express";
 import { initMongoConnection } from "./infrastructure/db/mongoConnection";
 import { orderRoutes } from "./infrastructure/http/routes/orderRoutes";
 import { authRoutes } from "./infrastructure/http/routes/authRoutes";
+import { Request, Response, NextFunction } from "express";
+import { handleHttpError } from "./infrastructure/http/utils/ErrorHandler";
 
 class App {
 	app: Application;
@@ -26,6 +28,12 @@ class App {
 	routes(): void {
 		this.app.use("/orders", orderRoutes);
 		this.app.use("/auth", authRoutes);
+
+		this.app.use(
+			(err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+				handleHttpError(err, res);
+			},
+		);
 	}
 }
 

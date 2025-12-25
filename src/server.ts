@@ -4,7 +4,7 @@ import app from "./app";
 
 const PORT = process.env.PORT;
 
-const init = async () => {
+const init = async (): Promise<void> => {
 	try {
 		app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
 	} catch (err) {

@@ -32,7 +32,7 @@ export class LoginUserUseCase {
 			throw new AppError("Email or password incorrect", 401);
 		}
 
-		const secret = process.env.JWT_SECRET || "a_default_secret";
+		const secret = process.env.JWT_SECRET as string;
 
 		const token = jwt.sign({}, secret, {
 			subject: user.id,
