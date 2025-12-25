@@ -4,6 +4,7 @@ import { CreateOrderUseCase } from "../../../application/use-cases/order/CreateO
 import { GetOrdersUseCase } from "../../../application/use-cases/order/GetOrdersUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
 import { OrderState } from "../../../domain/value-objects/order/OrderState";
+import { AppError } from "../../../shared/errors/AppError";
 
 @injectable()
 export class OrderController {
@@ -14,6 +15,12 @@ export class OrderController {
 
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
+			const { lab, patient, customer, services } = req.body;
+
+			if (!lab || !patient || !customer || !services) {
+				throw new AppError("Missing required fields", 400);
+			}
+
 			await this.createOrderUseCase.execute(req.body);
 
 			return res.status(201).json({ message: "Order was created" });
@@ -26,10 +33,14 @@ export class OrderController {
 		try {
 			const { state, page, limit } = req.query;
 
+			if (!page || !limit) {
+				throw new AppError("Missing page or limit parameters", 400);
+			}
+
 			const orders = await this.getOrdersUseCase.execute({
 				state: state as OrderState,
-				page: Number(page) || 1, 
-				limit: Number(limit) || 10, 
+				page: Number(page) || 1,
+				limit: Number(limit) || 10,
 			});
 
 			return res.status(200).json(orders);

@@ -1,12 +1,16 @@
 import "dotenv/config";
 
-import app from "./app";
+import { appInstance } from "./app";
 
 const PORT = process.env.PORT;
 
 const init = async (): Promise<void> => {
 	try {
-		app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+		await appInstance.dbs();
+
+		appInstance.app.listen(PORT, () =>
+			console.log(`Server is running on ${PORT}`),
+		);
 	} catch (err) {
 		console.log("Server failed to run", err);
 	}

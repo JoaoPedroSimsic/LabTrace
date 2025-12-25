@@ -8,7 +8,7 @@ const orderController = container.resolve(OrderController);
 
 orderRoutes.use(authMiddleware);
 
-orderRoutes.post("/create", (req, res) => orderController.create(req, res));
-orderRoutes.get("/get", (req, res) => orderController.get(req, res));
+orderRoutes.post("/", (req, res) => orderController.create(req, res));
+orderRoutes.get("/", (req, res) => orderController.get(req, res));
 
 export { orderRoutes };

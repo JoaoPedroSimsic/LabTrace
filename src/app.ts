@@ -12,13 +12,12 @@ class App {
 
 	constructor() {
 		this.app = express();
-		this.dbs();
 		this.middlewares();
 		this.routes();
 	}
 
-	dbs(): void {
-		initMongoConnection();
+	async dbs(): Promise<void> {
+		await initMongoConnection();
 	}
 
 	middlewares(): void {
@@ -37,4 +36,4 @@ class App {
 	}
 }
 
-export default new App().app;
+export const appInstance = new App();
