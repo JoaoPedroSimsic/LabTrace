@@ -5,12 +5,14 @@ import { GetOrdersUseCase } from "../../../application/use-cases/order/GetOrders
 import { handleHttpError } from "../utils/ErrorHandler";
 import { OrderState } from "../../../domain/value-objects/order/OrderState";
 import { AppError } from "../../../shared/errors/AppError";
+import { AdvanceOrderStateUseCase } from "../../../application/use-cases/order/AdvanceOrderStateUseCase";
 
 @injectable()
 export class OrderController {
 	constructor(
 		private createOrderUseCase: CreateOrderUseCase,
 		private getOrdersUseCase: GetOrdersUseCase,
+		private advanceOrderStateUseCase: AdvanceOrderStateUseCase,
 	) { }
 
 	async create(req: Request, res: Response): Promise<Response> {
@@ -44,6 +46,18 @@ export class OrderController {
 			});
 
 			return res.status(200).json(orders);
+		} catch (err: unknown) {
+			return handleHttpError(err, res);
+		}
+	}
+
+	async advance(req: Request, res: Response): Promise<Response> {
+		try {
+			const { id } = req.params;
+
+			await this.advanceOrderStateUseCase.execute(id);
+
+			return res.status(200).json({ message: "Order state was advanced" });
 		} catch (err: unknown) {
 			return handleHttpError(err, res);
 		}

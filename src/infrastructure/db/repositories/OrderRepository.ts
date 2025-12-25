@@ -47,6 +47,7 @@ export class OrderRepository implements IOrderRepository {
 			doc.state,
 			doc.status,
 			doc.services.map((s) => new Service(s.name, s.value, s.status)),
+			doc._id.toString(),
 		);
 	}
 }

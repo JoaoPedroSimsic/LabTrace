@@ -11,6 +11,7 @@ export class Order {
 		public state: OrderState,
 		public status: OrderStatus,
 		public services: Service[],
+		public readonly id?: string,
 	) {
 		this.validateServices();
 	}

@@ -10,5 +10,6 @@ orderRoutes.use(authMiddleware);
 
 orderRoutes.post("/", (req, res) => orderController.create(req, res));
 orderRoutes.get("/", (req, res) => orderController.get(req, res));
+orderRoutes.patch("/:id/advance", (req, res) => orderController.advance(req, res));
 
 export { orderRoutes };
