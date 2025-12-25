@@ -3,6 +3,7 @@ import "./shared/container";
 import express, { Application } from "express";
 import { initMongoConnection } from "./infrastructure/db/mongoConnection";
 import { orderRoutes } from "./infrastructure/http/routes/orderRoutes";
+import { authRoutes } from "./infrastructure/http/routes/authRoutes";
 
 class App {
 	app: Application;
@@ -24,6 +25,7 @@ class App {
 
 	routes(): void {
 		this.app.use("/orders", orderRoutes);
+		this.app.use("/auth", authRoutes);
 	}
 }
 

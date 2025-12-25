@@ -1,6 +1,7 @@
 export class User {
 	constructor(
-		public email: string,
-		public password: string,
+		public readonly email: string,
+		public readonly password: string,
+		public readonly id?: string,
 	) { }
 }
