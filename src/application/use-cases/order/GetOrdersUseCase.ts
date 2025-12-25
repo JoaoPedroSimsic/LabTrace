@@ -5,15 +5,17 @@ import { Order } from "../../../domain/entities/Order";
 
 interface DTO {
 	state?: OrderState;
+	page: number;
+	limit: number;
 }
 
 @injectable()
-export class ListAllOrdersUseCase {
+export class GetOrdersUseCase {
 	constructor(
 		@inject("OrderRepository") private orderRepository: IOrderRepository,
 	) { }
 
-	async execute(filter: DTO): Promise<Order[]> {
-		return await this.orderRepository.findAll(filter);
+	async execute({ state, page, limit }: DTO): Promise<Order[]> {
+		return await this.orderRepository.get({ state, page, limit });
 	}
 }

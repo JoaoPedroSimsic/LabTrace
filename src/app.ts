@@ -12,9 +12,9 @@ class App {
 
 	constructor() {
 		this.app = express();
+		this.dbs();
 		this.middlewares();
 		this.routes();
-		this.dbs();
 	}
 
 	dbs(): void {

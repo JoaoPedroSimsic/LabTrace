@@ -1,5 +1,6 @@
 import { OrderState } from "../value-objects/order/OrderState";
 import { OrderStatus } from "../value-objects/order/OrderStatus";
+import { AppError } from "../../shared/errors/AppError";
 import { Service } from "./Service";
 
 export class Order {
@@ -16,7 +17,7 @@ export class Order {
 
 	private validateServices(): void {
 		if (!this.services || this.services.length === 0) {
-			throw new Error("Order must have at least one service");
+			throw new AppError("Order must have at least one service");
 		}
 
 		const totalValue = this.services.reduce(
@@ -25,7 +26,7 @@ export class Order {
 		);
 
 		if (totalValue <= 0) {
-			throw new Error("Order total value must be greater than zero");
+			throw new AppError("Order total value must be greater than zero");
 		}
 	}
 
@@ -39,7 +40,7 @@ export class Order {
 		const nextState = nextStateMap[this.state];
 
 		if (!nextState) {
-			throw new Error(`Cannot advance order state from ${this.state}`);
+			throw new AppError(`Cannot advance order state from ${this.state}`);
 		}
 
 		this.state = nextState;

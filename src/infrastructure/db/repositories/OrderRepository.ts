@@ -11,14 +11,23 @@ export class OrderRepository implements IOrderRepository {
 		await OrderModel.create(order);
 	}
 
-	async findAll(filters: { state?: OrderState }): Promise<Order[]> {
+	async get({
+		state,
+		page,
+		limit,
+	}: {
+		state?: OrderState;
+		page: number;
+		limit: number;
+	}): Promise<Order[]> {
 		const query: Record<string, unknown> = {};
+		if (state) query.state = state;
 
-		if (filters.state) query.state = filters.state;
+		const docs = await OrderModel.find(query)
+			.skip((page - 1) * limit)
+			.limit(limit);
 
-		const docs = await OrderModel.find(query);
-
-		return docs.map((doc) => this.mapToEntity(doc));
+		return docs.map((doc) => this.mapToEntity(doc as IOrderDocument));
 	}
 
 	async findById(id: string): Promise<Order | null> {

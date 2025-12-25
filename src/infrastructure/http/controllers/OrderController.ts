@@ -1,7 +1,7 @@
 import { injectable } from "tsyringe";
 import { Request, Response } from "express";
 import { CreateOrderUseCase } from "../../../application/use-cases/order/CreateOrderUseCase";
-import { ListAllOrdersUseCase } from "../../../application/use-cases/order/ListAllOrdersUseCase";
+import { GetOrdersUseCase } from "../../../application/use-cases/order/GetOrdersUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
 import { OrderState } from "../../../domain/value-objects/order/OrderState";
 
@@ -9,7 +9,7 @@ import { OrderState } from "../../../domain/value-objects/order/OrderState";
 export class OrderController {
 	constructor(
 		private createOrderUseCase: CreateOrderUseCase,
-		private listAllOrdersUseCase: ListAllOrdersUseCase,
+		private getOrdersUseCase: GetOrdersUseCase,
 	) { }
 
 	async create(req: Request, res: Response): Promise<Response> {
@@ -22,12 +22,14 @@ export class OrderController {
 		}
 	}
 
-	async findAll(req: Request, res: Response): Promise<Response> {
+	async get(req: Request, res: Response): Promise<Response> {
 		try {
-			const { state } = req.query;
+			const { state, page, limit } = req.query;
 
-			const orders = await this.listAllOrdersUseCase.execute({
+			const orders = await this.getOrdersUseCase.execute({
 				state: state as OrderState,
+				page: Number(page) || 1, 
+				limit: Number(limit) || 10, 
 			});
 
 			return res.status(200).json(orders);
