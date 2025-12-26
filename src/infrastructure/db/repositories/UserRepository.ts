@@ -6,7 +6,7 @@ import { UserModel } from "../models/UserModel";
 @injectable()
 export class UserRepository implements IUserRepository {
 	async findByEmail(email: string): Promise<User | null> {
-		const user = await UserModel.findOne({ email });
+		const user = await UserModel.findOne({ email }).lean();
 
 		if (!user) return null;
 

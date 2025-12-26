@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { CreateOrderUseCase } from "@application/use-cases/order/CreateOrderUseCase";
 import { GetOrdersUseCase } from "@application/use-cases/order/GetOrdersUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
-import { OrderState } from "@domain/value-objects/order/OrderState";
+import { ORDER_STATES } from "@/domain/value-objects/order/OrderState";
 import { AppError } from "@shared/errors/AppError";
 import { AdvanceOrderStateUseCase } from "@application/use-cases/order/AdvanceOrderStateUseCase";
 import { z } from "zod";
@@ -30,6 +30,13 @@ export class OrderController {
 			.min(1, "Order must have at least one service"),
 	});
 
+	private getOrdersQuerySchema = z.object({
+		state: z.enum(ORDER_STATES).optional(),
+
+		page: z.coerce.number().min(1).default(1),
+		limit: z.coerce.number().min(1).max(100).default(10),
+	});
+
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
 			const validatedRequest = this.createOrderSchema.parse(req.body);
@@ -44,16 +51,12 @@ export class OrderController {
 
 	async get(req: Request, res: Response): Promise<Response> {
 		try {
-			const { state, page, limit } = req.query;
-
-			if (!page || !limit) {
-				throw new AppError("Missing page or limit parameters", 400);
-			}
+			const { state, page, limit } = this.getOrdersQuerySchema.parse(req.body);
 
 			const orders = await this.getOrdersUseCase.execute({
-				state: state as OrderState,
-				page: Number(page) || 1,
-				limit: Number(limit) || 10,
+				state,
+				page,
+				limit,
 			});
 
 			return res.status(200).json(orders);
