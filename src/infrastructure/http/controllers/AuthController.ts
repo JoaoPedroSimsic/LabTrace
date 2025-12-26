@@ -3,8 +3,6 @@ import { injectable } from "tsyringe";
 import { CreateUserUseCase } from "@application/use-cases/user/CreateUserUseCase";
 import { LoginUserUseCase } from "@application/use-cases/user/LoginUserUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
-import { AppError } from "@shared/errors/AppError";
-import validator from "validator";
 import { authSchema } from "../validators/AuthValidator";
 
 @injectable()
@@ -16,16 +14,9 @@ export class AuthController {
 
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
-			const { email, password } = authSchema.parse(req.body);
+			const validatedData = authSchema.parse(req.body);
 
-			if (!validator.isEmail(email)) {
-				throw new AppError("Invalid email format", 400);
-			}
-
-			await this.createUserUseCase.execute({
-				email,
-				password,
-			});
+			await this.createUserUseCase.execute(validatedData);
 
 			return res.status(201).json({ message: "User created" });
 		} catch (err: unknown) {
