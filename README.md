@@ -1,6 +1,6 @@
-# Linkio API
+# LabTrace API
 
-Linkio is a robust backend API designed for laboratory order management. It is built with **Node.js** and **TypeScript**, implementing **Clean Architecture** principles to ensure code decoupling, testability, and scalability.
+LabTrace is a robust backend API designed for laboratory order management. It is built with **Node.js** and **TypeScript**, implementing **Clean Architecture** principles to ensure code decoupling, testability, and scalability.
 
 ## 🚀 Key Features
 
@@ -42,8 +42,8 @@ The project follows a modular **Clean Architecture** structure:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/JoaoPedroSimsic/linkio.git](https://github.com/JoaoPedroSimsic/linkio.git)
-    cd linkio
+    git clone [https://github.com/JoaoPedroSimsic/LabTrace.git](https://github.com/JoaoPedroSimsic/LabTrace.git)
+    cd LabTrace
     ```
 
 2.  **Install dependencies:**
