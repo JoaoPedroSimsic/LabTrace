@@ -23,9 +23,16 @@ export class AuthController {
 
 	async login(req: Request, res: Response): Promise<Response> {
 		try {
-			const result = await this.loginUserUseCase.execute(req.body);
+			const { token } = await this.loginUserUseCase.execute(req.body);
 
-			return res.status(200).json(result);
+			res.cookie("auth_token", token, {
+				httpOnly: true,
+				secure: false,
+				sameSite: "lax",
+				maxAge: 24 * 60 * 60 * 1000,
+			});
+
+			return res.status(200).json(token);
 		} catch (err: unknown) {
 			return handleHttpError(err, res);
 		}

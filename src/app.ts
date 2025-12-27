@@ -6,6 +6,7 @@ import { orderRoutes } from "@infrastructure/http/routes/orderRoutes";
 import { authRoutes } from "@infrastructure/http/routes/authRoutes";
 import { Request, Response, NextFunction } from "express";
 import { handleHttpError } from "@infrastructure/http/utils/ErrorHandler";
+import cookieParser from "cookie-parser";
 
 class App {
 	app: Application;
@@ -22,6 +23,7 @@ class App {
 
 	middlewares(): void {
 		this.app.use(express.json());
+		this.app.use(cookieParser());
 	}
 
 	routes(): void {

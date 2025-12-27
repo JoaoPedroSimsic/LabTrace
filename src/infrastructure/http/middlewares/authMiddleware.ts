@@ -11,13 +11,11 @@ export function authMiddleware(
 	_res: Response,
 	next: NextFunction,
 ): void {
-	const authHeader = req.headers.authorization;
+	const token = req.cookies?.auth_token;
 
-	if (!authHeader) {
-		throw new AppError("Token missing", 401);
+	if (!token) {
+		throw new AppError("Auth token missing", 401);
 	}
-
-	const [, token] = authHeader.split(" ");
 
 	try {
 		const secret = process.env.JWT_SECRET as string;
