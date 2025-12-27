@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import { CreateOrderUseCase } from "@application/use-cases/order/CreateOrderUseCase";
 import { GetOrdersUseCase } from "@application/use-cases/order/GetOrdersUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
-import { AppError } from "@shared/errors/AppError";
 import { AdvanceOrderStateUseCase } from "@application/use-cases/order/AdvanceOrderStateUseCase";
 
 @injectable()
