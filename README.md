@@ -5,7 +5,7 @@ LabTrace is a robust backend API designed for laboratory order management. It is
 ## 🚀 Key Features
 
 * **Order Management:** Create orders, filter lists, and manage order lifecycles via a state machine (Created → Analysis → Completed).
-* **Authentication:** Secure user registration and login using JWT and Bcrypt.
+* **Authentication:** Secure user registration and login using JWT stored in **HTTP-only cookies**.
 * **Validation:** Strict input validation using Zod schemas.
 * **Dependency Injection:** Managed via `tsyringe` for loose coupling.
 * **Database:** MongoDB integration using Mongoose.
@@ -56,7 +56,6 @@ The project follows a modular **Clean Architecture** structure:
     ```bash
     cp .env.example .env
     ```
-    *Ensure `MONGO_HOST`, `MONGO_PORT`, etc., match your Docker configuration.*
 
 4.  **Start Database:**
     Run the MongoDB container:
@@ -76,16 +75,16 @@ The project follows a modular **Clean Architecture** structure:
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/auth/create` | Register a new user |
-| `POST` | `/auth/login` | Login and receive a JWT token |
+| `POST` | `/auth/login` | Login and receive an **HTTP-only authentication cookie** |
 
 ### Orders (Protected)
-*Requires `Authorization: Bearer <token>` header.*
+*These endpoints are protected via an authentication cookie. Once logged in, your API client (like Insomnia or Postman) will automatically include the cookie in all subsequent requests.*
 
 | Method | Endpoint | Description | payload example |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/orders` | Create a new order | `{ "lab": "...", "patient": "...", "services": [...] }` |
-| `GET` | `/orders` | Get orders (supports pagination & status filters) | Query Params: `?page=1&limit=10&state=CREATED` |
-| `PATCH` | `/orders/:id/advance` | Advance order state (e.g., Created -> Analysis) | N/A |
+| `GET` | `/orders` | Get orders (pagination & filters) | Body: `{ "page": 1, "limit": 10, "state": "CREATED" }` |
+| `PATCH` | `/orders/:id/advance` | Advance order state | N/A |
 
 ## 🧪 Testing
 
