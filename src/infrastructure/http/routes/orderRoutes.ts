@@ -2,14 +2,28 @@ import { Router } from "express";
 import { container } from "tsyringe";
 import { OrderController } from "../controllers/OrderController";
 import { authMiddleware } from "../middlewares/authMiddleware";
+import { validationMiddleware } from "../middlewares/validationMiddleware";
+import {
+	createOrderSchema,
+	getOrdersQuerySchema,
+	advanceOrderSchema,
+} from "../validators/OrderValidator";
 
 const orderRoutes = Router();
 const orderController = container.resolve(OrderController);
 
 orderRoutes.use(authMiddleware);
 
-orderRoutes.post("/", (req, res) => orderController.create(req, res));
-orderRoutes.get("/", (req, res) => orderController.get(req, res));
-orderRoutes.patch("/:id/advance", (req, res) => orderController.advance(req, res));
+orderRoutes.post("/", validationMiddleware(createOrderSchema), (req, res) =>
+	orderController.create(req, res),
+);
+orderRoutes.get("/", validationMiddleware(getOrdersQuerySchema), (req, res) =>
+	orderController.get(req, res),
+);
+orderRoutes.patch(
+	"/:id/advance",
+	validationMiddleware(advanceOrderSchema),
+	(req, res) => orderController.advance(req, res),
+);
 
 export { orderRoutes };

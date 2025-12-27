@@ -5,7 +5,6 @@ import { GetOrdersUseCase } from "@application/use-cases/order/GetOrdersUseCase"
 import { handleHttpError } from "../utils/ErrorHandler";
 import { AppError } from "@shared/errors/AppError";
 import { AdvanceOrderStateUseCase } from "@application/use-cases/order/AdvanceOrderStateUseCase";
-import { createOrderSchema, getOrdersQuerySchema } from "../validators/OrderValidator";
 
 @injectable()
 export class OrderController {
@@ -17,9 +16,7 @@ export class OrderController {
 
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
-			const validatedRequest = createOrderSchema.parse(req.body);
-
-			await this.createOrderUseCase.execute(validatedRequest);
+			await this.createOrderUseCase.execute(req.body);
 
 			return res.status(201).json({ message: "Order was created" });
 		} catch (err: unknown) {
@@ -29,13 +26,7 @@ export class OrderController {
 
 	async get(req: Request, res: Response): Promise<Response> {
 		try {
-			const { state, page, limit } = getOrdersQuerySchema.parse(req.body);
-
-			const orders = await this.getOrdersUseCase.execute({
-				state,
-				page,
-				limit,
-			});
+			const orders = await this.getOrdersUseCase.execute(req.body);
 
 			return res.status(200).json(orders);
 		} catch (err: unknown) {

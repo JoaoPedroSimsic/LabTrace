@@ -3,7 +3,6 @@ import { injectable } from "tsyringe";
 import { CreateUserUseCase } from "@application/use-cases/user/CreateUserUseCase";
 import { LoginUserUseCase } from "@application/use-cases/user/LoginUserUseCase";
 import { handleHttpError } from "../utils/ErrorHandler";
-import { authSchema } from "../validators/AuthValidator";
 
 @injectable()
 export class AuthController {
@@ -14,9 +13,7 @@ export class AuthController {
 
 	async create(req: Request, res: Response): Promise<Response> {
 		try {
-			const validatedData = authSchema.parse(req.body);
-
-			await this.createUserUseCase.execute(validatedData);
+			await this.createUserUseCase.execute(req.body);
 
 			return res.status(201).json({ message: "User created" });
 		} catch (err: unknown) {
@@ -26,9 +23,7 @@ export class AuthController {
 
 	async login(req: Request, res: Response): Promise<Response> {
 		try {
-			const validatedRequest = authSchema.parse(req.body);
-
-			const result = await this.loginUserUseCase.execute(validatedRequest);
+			const result = await this.loginUserUseCase.execute(req.body);
 
 			return res.status(200).json(result);
 		} catch (err: unknown) {

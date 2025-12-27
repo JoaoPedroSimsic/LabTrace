@@ -4,32 +4,43 @@ import { ZodError } from "zod";
 
 export const handleHttpError = (err: unknown, res: Response): Response => {
     if (err instanceof AppError) {
-        return res.status(err.statusCode).json({ error: err.message }); 
+        return res.status(err.statusCode).json({ 
+            status: "error",
+            message: err.message 
+        }); 
     }
 
     if (err instanceof ZodError) {
-        const messages = err.issues.map((issue) => ({
-            field: issue.path.join("."),
-            message: issue.message,
-        }));
-
         return res.status(400).json({
-            error: "Validation failed",
-            details: messages,
+            status: "validation_error",
+            message: "The provided data is invalid",
+            details: err.issues.map((issue) => ({
+                field: issue.path.join("."),
+                message: issue.message,
+            })),
         });
     }
 
     if (err instanceof Error) {
         if (err.name === "ValidationError" || err.name === "CastError") {
-            return res.status(400).json({ error: "Invalid data format or ID" }); 
+            return res.status(400).json({ 
+                status: "error",
+                message: "Invalid data format or database ID" 
+            }); 
         }
 
-        console.error(err.stack);
+        console.error(`[Internal Error]: ${err.stack}`);
+
         return res.status(500).json({
-            error: "Internal server error",
-            details: err.message,
+            status: "critical_error",
+            message: process.env.NODE_ENV === "production" 
+                ? "An internal server error occurred" 
+                : err.message, 
         }); 
     }
 
-    return res.status(500).json({ error: "An unexpected error occured" }); 
+    return res.status(500).json({ 
+        status: "error",
+        message: "An unexpected error occurred" 
+    }); 
 };
