@@ -4,29 +4,37 @@ import { AppError } from "@application/exceptions/AppError";
 import { Service } from "./Service";
 
 export class Order {
-	constructor(
-		public lab: string,
-		public patient: string,
-		public customer: string,
-		public state: OrderState,
-		public status: OrderStatus,
-		public services: Service[],
-		public readonly id?: string,
-	) { }
+  constructor(
+    public lab: string,
+    public patient: string,
+    public customer: string,
+    public state: OrderState,
+    public status: OrderStatus,
+    public services: Service[],
+    public readonly id?: string,
+  ) {}
 
-	public advanceState(): void {
-		const nextStateMap: Record<OrderState, OrderState | null> = {
-			CREATED: "ANALYSIS",
-			ANALYSIS: "COMPLETED",
-			COMPLETED: null,
-		};
+  public advanceState(): void {
+    const nextStateMap: Record<OrderState, OrderState | null> = {
+      CREATED: "ANALYSIS",
+      ANALYSIS: "COMPLETED",
+      COMPLETED: null,
+    };
 
-		const nextState = nextStateMap[this.state];
+    const nextState = nextStateMap[this.state];
 
-		if (!nextState) {
-			throw new AppError(`Cannot advance order state from ${this.state}`);
-		}
+    if (!nextState) {
+      throw new AppError(`Cannot advance order state from ${this.state}`);
+    }
 
-		this.state = nextState;
-	}
+    this.state = nextState;
+  }
+
+  public addService(service: Service): void {
+    if (!service) {
+      throw new AppError(`Invalid service`);
+    }
+
+    this.services.push(service);
+  }
 }
